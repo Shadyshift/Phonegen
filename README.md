@@ -27,3 +27,7 @@ When you are in phonegen you can type help to see the commands.
 -help shows you commands
 
 -exit and quit let you quit phonegen
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
