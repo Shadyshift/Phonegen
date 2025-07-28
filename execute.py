@@ -18,7 +18,7 @@ Available commands:
 """)
 
 def main():
-    print("Welcome to the PhoneGen Launcher. Type 'help' for commands.")
+    print("Welcome to the PhoneGen version 1.2 Launcher. Type 'help' for commands.")
     print("DISCLAIMER: This software is provided as is, without warranty of any kind. Use at your own risk.")
     while True:
         command = input(">>> ").strip().lower()
