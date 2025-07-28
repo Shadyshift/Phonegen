@@ -2,7 +2,7 @@ import subprocess
 import os
 import platform
 import sys
-
+#phonegen made with <3 by casxx.deb
 def clear_console():
     os.system('cls' if platform.system() == 'Windows' else 'clear')
 
