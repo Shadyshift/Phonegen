@@ -33,7 +33,7 @@ def prompt_files(files):
     print("Choose files to convert. Choose multiple seperated by a ,")
     for i, file in enumerate(files):
         print(f" [{i+1}] {file}")
-    selected = input("Bestandnummers (bijv: 1,3,4): ").strip().split(',')
+    selected = input("Choose (Example: 1,3,4): ").strip().split(',')
     return [files[int(i)-1] for i in selected if i.strip().isdigit() and 1 <= int(i) <= len(files)]
 
 def prompt_formats():
