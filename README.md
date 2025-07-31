@@ -1,6 +1,6 @@
 # Phonegen
 A fast, effective, simple phonenumber generator. :)
-
+  version 1.3
 # Installation linux(reccomended)
 Step0: install git
 Step1: open a terminal and type git clone https://github.com/Shadyshift/Phonegen and hit enter.
@@ -33,7 +33,11 @@ When you are in phonegen you can type help to see the commands.
 # IMPORTANT
 This project and the features like gui.html and convert -gui ARE EXPERIMENTAL! It is recommened to use the cli version of this program
 
+# What changed?
+1. Added a fix to the phonegen scan, so it is less likely that it gives a false positive
+2. Added a simple gui to convert. Use it with convert -gui, STILL A EXPERIMENT
+3. Shhhhh added a html file so you can send phonenumber files to a discord webhook, STILL A EXPERIMENT!
+   version 1.3
+
 # License
-
-
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
