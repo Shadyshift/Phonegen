@@ -30,7 +30,7 @@ When you are in phonegen you can type help to see the commands.
 
 -exit and quit let you quit phonegen
 
-#IMPORTANT
+# IMPORTANT
 This project and the features like gui.html and convert -gui ARE EXPERIMENTAL! It is recommened to use the cli version of this program
 
 # License
