@@ -2,7 +2,7 @@ import subprocess
 import os
 import platform
 import sys
-#phonegen made with <3 by casxx.deb
+
 def clear_console():
     os.system('cls' if platform.system() == 'Windows' else 'clear')
 
@@ -12,13 +12,14 @@ Available commands:
   phonegen start         → Start phone number generator
   phonegen scan          → Scan .txt output files for bad numbers
   convert                → Convert .txt files to .csv or .json
+  convert -help          → Shows more options for convert.
   clear                  → Clear the screen
   help                   → Show this help menu
   quit / exit            → Exit the launcher
 """)
 
 def main():
-    print("Welcome to the PhoneGen version 1.2 Launcher. Type 'help' for commands.")
+    print("Welcome to the PhoneGen Launcher. Type 'help' for commands.")
     print("DISCLAIMER: This software is provided as is, without warranty of any kind. Use at your own risk.")
     while True:
         command = input(">>> ").strip().lower()
@@ -32,8 +33,14 @@ def main():
         elif command == "convert":
             subprocess.run([sys.executable, "convert_tool.py"])
 
-        #elif command == "convert":
-            #subprocess.run([sys.executable, "gui.html"])
+        elif command == "convert -gui":
+            subprocess.run([sys.executable, "gui_converter.py"])
+
+        elif command == "convert -help":
+            subprocess.run([sys.executable, "gui_convert_help.py"])
+
+        #elif command == "gui":
+            #subprocess.run([sys.executable, "gui.html"])       #yeah I know it is not that simple
 
         elif command in ["quit", "exit"]:
             print("Goodbye!")
