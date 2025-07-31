@@ -1,6 +1,6 @@
 # Phonegen
 A fast, effective, simple phonenumber generator. :)
-  -version 1.3
+-version 1.3
 # Installation linux(reccomended)
 Step0: install git
 Step1: open a terminal and type git clone https://github.com/Shadyshift/Phonegen and hit enter.
