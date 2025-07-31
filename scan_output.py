@@ -1,87 +1,73 @@
-import time
-
 import os
+import re
+import time
+from pathlib import Path
 
-# Choose which dataset to use
-try:
-    from country_data import COUNTRY_PHONE_DATA
-except ImportError:
-    from landline_data_full import LANDLINE_PHONE_DATA as COUNTRY_PHONE_DATA
+def is_valid_phone_number(line: str) -> bool:
+    line = line.strip()
+    # Remove common formatting characters: spaces, dashes, parentheses
+    cleaned = re.sub(r"[()\-\s]", "", line)
+    # Match cleaned format: must start with + and followed by 8–15 digits
+    return re.fullmatch(r"\+\d{8,15}", cleaned) is not None
 
-VALID_CODES = {
-    data["code"].decode().strip(): {
-        "prefixes": [p.decode() for p in data["prefixes"]],
-        "length": data["length"]
-    }
-    for data in COUNTRY_PHONE_DATA.values()
-    for code in [data["code"].decode().strip()]
-}
+def scan_file(filename: str):
+    print(f"\nScanning '{filename}'...")
+    start = time.time()
 
-def is_valid_number(line):
-    try:
-        line = line.decode().strip()
-        if not line:
-            return False, "Empty line"
+    with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
+        lines = f.readlines()
 
-        parts = line.split(" ", 1)
-        if len(parts) != 2:
-            return False, "Missing country code or number"
+    valid_lines = []
+    invalid_lines = []
 
-        code, number = parts
-        if code not in VALID_CODES:
-            return False, f"Unknown country code: {code}"
+    for line in lines:
+        if is_valid_phone_number(line):
+            valid_lines.append(line)
+        else:
+            invalid_lines.append(line.strip())
 
-        if not number.isdigit():
-            return False, "Contains non-digit characters"
+    duration = time.time() - start
+    print(f"Scan completed in {duration:.2f} seconds.")
+    print(f"Valid lines: {len(valid_lines)}")
+    print(f"Invalid lines: {len(invalid_lines)}")
 
-        for prefix in VALID_CODES[code]["prefixes"]:
-            if number.startswith(prefix):
-                expected_length = VALID_CODES[code]["length"] + len(prefix)
-                if len(number) != expected_length:
-                    return False, f"Wrong number length: expected {expected_length}, got {len(number)}"
-                return True, None
+    if invalid_lines:
+        print("\nInvalid entries:")
+        for bad in invalid_lines:
+            print(f"  {bad}")
 
-        return False, f"Invalid prefix in: {number}"
-    except Exception as e:
-        return False, f"Decode error: {e}"
+        choice = input("\nDo you want to delete invalid entries from this file? (y/N): ").strip().lower()
+        if choice == 'y':
+            with open(filename, 'w', encoding='utf-8') as f:
+                f.writelines(valid_lines)
+            print("Invalid entries removed.")
 
-def scan_output_file():
-    filename = input("Enter the filename to scan (e.g. output.txt): ").strip()
-    if not filename or not os.path.exists(filename):
-        print(f"❌ File '{filename}' not found.")
+def detect_txt_files():
+    txt_files = [f for f in Path('.').glob("*.txt") if f.is_file()]
+    output_files = []
+    print("Detected .txt files with phone-like numbers:")
+    for file in txt_files:
+        with open(file, 'r', encoding='utf-8', errors='ignore') as f:
+            for line in f:
+                if line.startswith('+') and any(char.isdigit() for char in line):
+                    output_files.append(str(file))
+                    print(f"  {file}")
+                    break
+    return output_files
+
+def main():
+    print("PhoneGen Scanner - Fast mode")
+
+    candidates = detect_txt_files()
+    if not candidates:
+        print("No output .txt files found with phone-like data.")
         return
 
-    start = time.time()
-    bad_lines = []
-    good_lines = []
-
-    with open(filename, 'rb') as f:
-        for idx, line in enumerate(f, 1):
-            is_valid, reason = is_valid_number(line)
-            if is_valid:
-                good_lines.append(line)
-            else:
-                bad_lines.append((idx, line.decode(errors='ignore').strip(), reason))
-
-    elapsed = time.time() - start
-    print(f"\nScanned {idx} lines in {elapsed:.2f} seconds.")
-
-    if bad_lines:
-        print(f"\nFound {len(bad_lines)} invalid lines:\n")
-        for lineno, text, reason in bad_lines[:20]:
-            print(f"[Line {lineno}] {reason} → {text}")
-        if len(bad_lines) > 20:
-            print("... (more lines hidden)")
-
-        choice = input("\nDelete bad lines and save cleaned file? (y/N): ").strip().lower()
-        if choice == 'y':
-            with open(filename, 'wb') as f:
-                f.writelines(good_lines)
-            print("Cleaned file saved.")
-        else:
-            print("No changes made.")
+    filename = input("\nEnter the filename you want to scan (or leave blank to cancel): ").strip()
+    if filename and os.path.exists(filename):
+        scan_file(filename)
     else:
-        print("No issues found!")
+        print("Cancelled or file not found.")
 
 if __name__ == "__main__":
-    scan_output_file()
+    main()
