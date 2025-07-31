@@ -32,6 +32,9 @@ def main():
         elif command == "convert":
             subprocess.run([sys.executable, "convert_tool.py"])
 
+        #elif command == "convert":
+            #subprocess.run([sys.executable, "gui.html"])
+
         elif command in ["quit", "exit"]:
             print("Goodbye!")
             break
