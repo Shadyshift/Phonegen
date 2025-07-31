@@ -36,7 +36,7 @@ This project and the features like gui.html and convert -gui ARE EXPERIMENTAL! I
 # What changed?
 1. Added a fix to the phonegen scan, so it is less likely that it gives a false positive
 2. Added a simple gui to convert. Use it with convert -gui, STILL A EXPERIMENT
-3. Shhhhh added a html file so you can send phonenumber files to a discord webhook, STILL A EXPERIMENT!
+3. Shhhhh I added a html file so you can send phonenumber files to a discord webhook, STILL A EXPERIMENT!
    version 1.3
 
 # License
