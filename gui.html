@@ -1,0 +1,193 @@
+<!DOCTYPE html> <!-- I know that i am not the best in html -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PhoneGen Control Center</title>
+  <style> 
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #222;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    main {
+      padding: 20px;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    button, input[type="text"], select {
+      margin: 5px;
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    input[type="text"], select {
+      width: 100%;
+      max-width: 500px;
+    }
+    #fileList {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .file-box {
+      flex: 1 1 calc(33% - 20px);
+      background: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .file-box span {
+      flex: 1;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 10px;
+    }
+    .file-box button {
+      background-color: #dc3545;
+      color: white;
+    }
+    .file-box button:hover {
+      background-color: #a71d2a;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>PhoneGen Control Center</h1>
+  </header>
+  <main>
+    <div class="section">
+      <h2>File Explorer</h2>
+      <input type="file" id="fileInput" multiple>
+      <div id="fileList"></div>
+    </div>
+
+    <div class="section">
+      <h2>Send to Discord Webhook</h2>
+      <input type="text" id="webhookUrl" placeholder="Enter a new Discord Webhook URL">
+      <button onclick="saveWebhook()">Save Webhook</button>
+      <select id="savedWebhooks" onchange="selectSavedWebhook()">
+        <option value="">Select saved webhook...</option>
+      </select>
+      <button onclick="sendToDiscord()">Send All Files</button>
+    </div>
+  </main>
+
+  <script>
+    let selectedFiles = [];
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList'); 
+    const webhookUrlInput = document.getElementById('webhookUrl');
+    const savedWebhooksSelect = document.getElementById('savedWebhooks');
+
+    fileInput.addEventListener('change', () => {
+      selectedFiles = Array.from(fileInput.files);
+      renderFileList();
+    });
+
+    function renderFileList() {
+      fileList.innerHTML = '';
+      selectedFiles.forEach((file, index) => {
+        const fileBox = document.createElement('div');
+        fileBox.className = 'file-box';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = file.name;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = () => {
+          selectedFiles.splice(index, 1);
+          renderFileList();
+        };
+
+        fileBox.appendChild(nameSpan);
+        fileBox.appendChild(deleteBtn);
+        fileList.appendChild(fileBox);
+      });
+    }
+
+    function sendToDiscord() {
+      const webhookUrl = webhookUrlInput.value.trim();
+      if (!webhookUrl) return;
+
+      selectedFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function () {
+          const blob = new Blob([reader.result], { type: file.type });
+          const formData = new FormData();
+          formData.append('file', blob, file.name);
+
+          fetch(webhookUrl, {
+            method: 'POST',
+            body: formData
+          })
+          .catch(error => {
+            console.error(`Error sending "${file.name}":`, error);
+          });
+        };
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    function saveWebhook() {
+      const url = webhookUrlInput.value.trim();
+      if (!url) return;
+
+      let list = JSON.parse(localStorage.getItem('savedWebhooks') || '[]');
+      if (!list.includes(url)) {
+        list.push(url);
+        localStorage.setItem('savedWebhooks', JSON.stringify(list));
+        populateSavedWebhooks();
+      }
+    }
+
+    function populateSavedWebhooks() {
+      savedWebhooksSelect.innerHTML = '<option value="">Select saved webhook...</option>';
+      const list = JSON.parse(localStorage.getItem('savedWebhooks') || '[]');
+      list.forEach(url => {
+        const opt = document.createElement('option');
+        opt.value = url;
+        opt.textContent = url;
+        savedWebhooksSelect.appendChild(opt);
+      });
+    }
+
+    function selectSavedWebhook() {
+      const selected = savedWebhooksSelect.value;
+      if (selected) webhookUrlInput.value = selected;
+    }
+
+    populateSavedWebhooks();
+  </script>
+</body>
+</html>
