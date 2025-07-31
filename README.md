@@ -2,12 +2,14 @@
 A fast, effective, simple phonenumber generator. :)
 
 # Installation linux(reccomended)
+Step0: install git
 Step1: open a terminal and type git clone https://github.com/Shadyshift/Phonegen and hit enter.
 Step2: Install python3 on your device
 Step3: cd to the phonegen directory
 Step4: To start the program type python3 execute.py to start the program
 
 # Installation Windows
+Step0: install git
 Step1: Open terminal and type git clone https://github.com/Shadyshift/Phonegen and hit enter
 Step2: Install python on your device
 Step3: Go to your directory and type in the navigationbar powershell
