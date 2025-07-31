@@ -30,6 +30,10 @@ When you are in phonegen you can type help to see the commands.
 
 -exit and quit let you quit phonegen
 
-## License
+#IMPORTANT
+This project and the features like gui.html and convert -gui ARE EXPERIMENTAL! It is recommened to use the cli version of this program
+
+# License
+
 
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for details.
