@@ -2,7 +2,7 @@ import subprocess
 import os
 import platform
 import sys
-
+import webbrowser
 def clear_console():
     os.system('cls' if platform.system() == 'Windows' else 'clear')
 
@@ -13,6 +13,7 @@ Available commands:
   phonegen scan          → Scan .txt output files for bad numbers
   convert                → Convert .txt files to .csv or .json
   convert -help          → Shows more options for convert.
+  gui                    → Opens a gui to send files to a discord webhook
   clear                  → Clear the screen
   help                   → Show this help menu
   quit / exit            → Exit the launcher
@@ -39,8 +40,8 @@ def main():
         elif command == "convert -help":
             subprocess.run([sys.executable, "gui_convert_help.py"])
 
-        #elif command == "gui":
-            #subprocess.run([sys.executable, "gui.html"])       #yeah I know it is not that simple
+        elif command == "gui":
+            RdFile = webbrowser.open(r'gui.html')
 
         elif command in ["quit", "exit"]:
             print("Goodbye!")
